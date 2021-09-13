@@ -1,5 +1,5 @@
 package org.homework.model;
 
-public interface Model<ID> {
+public interface BaseEntity<ID> {
     ID getId();
 }
