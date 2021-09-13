@@ -15,7 +15,7 @@ public class User implements Serializable,Model<Long> {
 
   private static final long serialVersionUID = 239475831256547L;
   private Long id;
-  private String userName;
+  private String username;
   private String firstName;
   private String lastName;
   private String email;

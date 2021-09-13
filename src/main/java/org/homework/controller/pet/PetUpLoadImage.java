@@ -26,27 +26,35 @@ public class PetUpLoadImage implements Controller {
   private void upload() {
     System.out.print(" ENTER PET-ID \n \uD83D\uDC49 ");
     String petId = scanner.next();
-    if (Validator.validNumber(petId)) {
+    if (!Validator.validNumber(petId)) {
       System.out.print(
-          " Please, enter the path to the file \n EXAMPLE \uD83D\uDC49 /User/DESKTOP/logo.png \n \uD83D\uDC49 ");
-      String next = scanner.next();
-      if (Validator.validString(next) & next.contains("/")
-          & next.contains("png") | next.contains("jpg")) {
-        Long integer = petService.uploadImage(new File(next), Long.valueOf(petId));
-        if (integer == 200) {
-          System.out.println(" ✅ Successfully");
-        } else {
-          System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again \n ");
-          upload();
-        }
-      } else {
-        System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again \n ");
-        upload();
-      }
-    } else {
-      System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again \n ");
+          "\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again ( only numbers ) \n ");
       upload();
     }
+    Long status = petService.uploadImage(validPath(), Long.valueOf(petId));
+    if (status == 200) {
+      System.out.println(" ✅ Successfully");
+    }
+  }
+
+  private File validPath() {
+    System.out.print(
+        " Please, enter the path to the file \n EXAMPLE \uD83D\uDC49 /User/DESKTOP/logo.png \n\uD83D\uDC49 ");
+    String filePath = scanner.next();
+    if (!filePath.contains("/")) {
+      System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again ) \n ");
+     return validPath();
+    }
+    if (!filePath.contains(".png") | filePath.contains(".jpg")) {
+      System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again ) \n ");
+      return validPath();
+    }
+    File file = new File(filePath);
+    if (!file.exists()) {
+      System.out.print("\n      ⚠️ Something Wrong ⚠️ \n \uD83D\uDCAC Please, try again ) \n ");
+     return validPath();
+    }
+    return file;
   }
 
   @Override

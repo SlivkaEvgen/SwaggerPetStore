@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
       String phone) {
     User user = new User();
     user.setId(id);
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setFirstName(firstName);
     user.setLastName(lastName);
     user.setUserStatus(200);
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
       String phone) {
     User user = new User();
     user.setId(id);
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setFirstName(firstName);
     user.setLastName(lastName);
     user.setPassword(password);

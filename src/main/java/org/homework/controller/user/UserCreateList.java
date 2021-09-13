@@ -39,7 +39,7 @@ public class UserCreateList implements Controller {
   private void createUser() {
     User user = new User();
     user.setId(enterCommands.enterId());
-    user.setUserName(enterCommands.enterUserName());
+    user.setUsername(enterCommands.enterUserName());
     user.setFirstName(enterCommands.enterFirstName());
     user.setLastName(enterCommands.enterLastName());
     user.setEmail(enterCommands.enterEmail());

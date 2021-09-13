@@ -51,7 +51,7 @@ public class EnterCommands implements Controller {
     String userName = scanner.next();
     if (userName.length() > 10) {
       System.out.print("\n      ⚠️ Wrong ⚠️ \n \uD83D\uDCAC Please, enter again -> no more than 10 and only letters \n");
-      return enterName();
+      return enterUserName();
     }
     return userName;
   }
