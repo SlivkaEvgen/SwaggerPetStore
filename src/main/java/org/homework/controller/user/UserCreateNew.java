@@ -1,8 +1,8 @@
 package org.homework.controller.user;
 
 import lombok.NoArgsConstructor;
-import org.homework.controller.interfaces.Controller;
 import org.homework.controller.EnterCommands;
+import org.homework.controller.interfaces.Controller;
 import org.homework.service.UserServiceImpl;
 
 @NoArgsConstructor

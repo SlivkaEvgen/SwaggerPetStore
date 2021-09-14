@@ -53,14 +53,7 @@ public class UserRepositoryImpl implements UserRepository {
   @Override
   public Long create(User user) {
     RequestBody requestBody =
-        new Request.Builder()
-            .url(HttpUrl.get(URI.create(URI_USER)))
-            .post(
-                RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user)))
-            .header("Content-type", "application/json")
-            .build()
-            .body();
+        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user));
     Response response =
         OK_CLIENT
             .newCall(
@@ -85,14 +78,8 @@ public class UserRepositoryImpl implements UserRepository {
   @Override
   public Long createListUsers(List<User> usersList) {
     RequestBody requestBody =
-        new Request.Builder()
-            .url(HttpUrl.get(URI.create(URI_USER + "/createWithList")))
-            .post(
-                RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"), GSON.toJson(usersList)))
-            .header("Content-type", "application/json")
-            .build()
-            .body();
+        RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"), GSON.toJson(usersList));
     Response response =
         OK_CLIENT
             .newCall(
@@ -106,16 +93,26 @@ public class UserRepositoryImpl implements UserRepository {
 
   @SneakyThrows
   @Override
+  public Long createArrayUsers(User[] arrayUsers) {
+    RequestBody requestBody =
+        RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"), GSON.toJson(arrayUsers));
+    Response response =
+        OK_CLIENT
+            .newCall(
+                new Request.Builder()
+                    .url(HttpUrl.get(URI.create(URI_USER + "/createWithArray")))
+                    .post(requestBody)
+                    .build())
+            .execute();
+    return (long) response.code();
+  }
+
+  @SneakyThrows
+  @Override
   public Long update(User user, String userName) {
     RequestBody requestBody =
-        new Request.Builder()
-            .url(HttpUrl.get(URI.create(URI_USER + "/" + userName)))
-            .put(
-                RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user)))
-            .header("Content-type", "application/json")
-            .build()
-            .body();
+        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user));
     Response response =
         OK_CLIENT
             .newCall(

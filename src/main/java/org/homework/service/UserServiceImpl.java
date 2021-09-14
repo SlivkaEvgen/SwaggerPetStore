@@ -41,6 +41,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Long createArrayUsers(User[]arrayUsers) {
+    return userRepository.createArrayUsers(arrayUsers);
+  }
+
+  @Override
   public Long createNewUser(
       Long id,
       String userName,

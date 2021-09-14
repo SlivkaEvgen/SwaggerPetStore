@@ -14,6 +14,8 @@ public interface UserService {
 
   Long createListUsers(List<User> usersList);
 
+  Long createArrayUsers(User[] arrayUsers);
+
   Long createNewUser(
       Long id,
       String userName,

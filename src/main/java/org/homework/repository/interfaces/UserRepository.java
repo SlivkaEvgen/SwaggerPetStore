@@ -1,6 +1,7 @@
 package org.homework.repository.interfaces;
 
 import org.homework.model.User;
+
 import java.util.List;
 
 public interface UserRepository {
@@ -14,6 +15,8 @@ public interface UserRepository {
   User getByUserName(String userName);
 
   Long createListUsers(List<User> usersList);
+
+  Long createArrayUsers(User[] arrayUsers);
 
   Long update(User user, String userName);
 
