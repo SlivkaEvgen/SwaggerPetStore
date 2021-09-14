@@ -12,7 +12,7 @@ import org.homework.util.PropertiesLoader;
 import java.net.URI;
 
 @NoArgsConstructor
-public class StoreRepositoryImpl implements StoreRepository {
+public class StoreRepositoryImpl extends Parser<Order,Response,Request> implements StoreRepository {
 
   private final OkHttpClient OK_CLIENT = HttpConnect.getInstance();
   private final String URI_STORE = PropertiesLoader.getProperties("uriStore");
@@ -56,25 +56,30 @@ public class StoreRepositoryImpl implements StoreRepository {
   }
 
   @SneakyThrows
-  private Response getResponse(Request request) {
+  @Override
+  protected Response getResponse(Request request) {
     return OK_CLIENT.newCall(request).execute();
   }
 
-  private Request.Builder getRequestBuilder(String url) {
+  @Override
+  protected Request.Builder getRequestBuilder(String url) {
     return new Request.Builder().url(getUrl(url));
   }
 
-  private HttpUrl getUrl(String urlUrl) {
+  @Override
+  protected HttpUrl getUrl(String urlUrl) {
     return HttpUrl.get(URI.create(URI_STORE + urlUrl));
   }
 
   @SneakyThrows
-  private Order gsonGet(String urls) {
+  @Override
+  protected Order gsonGet(String urls) {
     return GSON.fromJson(getResponse(getRequestBuilder(urls).build()).body().string(), Order.class);
   }
 
   @SneakyThrows
-  private Order gsonWithBody(Response response) {
+  @Override
+  protected Order gsonWithBody(Response response) {
     return GSON.fromJson(response.body().string(), Order.class);
   }
 }

@@ -13,12 +13,13 @@ import java.net.URI;
 import java.util.List;
 
 @NoArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends Parser<User,Response,Request> implements UserRepository {
 
   private final OkHttpClient OK_CLIENT = HttpConnect.getInstance();
   private final Gson GSON = new Gson();
   private final String URI_USER = PropertiesLoader.getProperties("uriUser");
   private static UserRepositoryImpl userRepository;
+  private final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
   public static UserRepositoryImpl getUserRepository() {
     if (userRepository == null) {
@@ -30,109 +31,104 @@ public class UserRepositoryImpl implements UserRepository {
   @SneakyThrows
   @Override
   public Long loginUser(String username, String password) {
-    Request request =
-        new Request.Builder()
-            .url(
-                HttpUrl.get(
-                    URI.create(URI_USER + "/login?username=" + username + "&password=" + password)))
-            .build();
-    Response response = OK_CLIENT.newCall(request).execute();
-    return (long) response.code();
+    return (long)
+        getResponse(
+                getRequestBuilder("/login?username=" + username + "&password=" + password).build())
+            .code();
   }
 
   @SneakyThrows
   @Override
   public Long logOutUser() {
-    Request request =
-        new Request.Builder().url(HttpUrl.get(URI.create(URI_USER + "/logout"))).get().build();
-    Response response = OK_CLIENT.newCall(request).execute();
-    return (long) response.code();
+    return (long) getResponse(getRequestBuilder("/logout").get().build()).code();
   }
 
   @SneakyThrows
   @Override
   public Long create(User user) {
-    RequestBody requestBody =
-        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user));
-    Response response =
-        OK_CLIENT
-            .newCall(
-                new Request.Builder()
-                    .url(HttpUrl.get(URI.create(URI_USER)))
-                    .post(requestBody)
+    return (long)
+        getResponse(
+                getRequestBuilder("")
+                    .post(RequestBody.create(MEDIA_TYPE, GSON.toJson(user)))
                     .build())
-            .execute();
-    return (long) response.code();
+            .code();
   }
 
   @SneakyThrows
   @Override
   public User getByUserName(String userName) {
-    Request request =
-        new Request.Builder().url(HttpUrl.get(URI.create(URI_USER + "/" + userName))).get().build();
-    Response response = OK_CLIENT.newCall(request).execute();
-    return GSON.fromJson(response.body().string(), User.class);
+    return gsonGet("/" + userName);
   }
 
   @SneakyThrows
   @Override
   public Long createListUsers(List<User> usersList) {
-    RequestBody requestBody =
-        RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"), GSON.toJson(usersList));
-    Response response =
-        OK_CLIENT
-            .newCall(
-                new Request.Builder()
-                    .url(HttpUrl.get(URI.create(URI_USER + "/createWithList")))
-                    .post(requestBody)
+    return (long)
+        getResponse(
+                getRequestBuilder("/createWithList")
+                    .post(RequestBody.create(MEDIA_TYPE, GSON.toJson(usersList)))
                     .build())
-            .execute();
-    return (long) response.code();
+            .code();
   }
 
   @SneakyThrows
   @Override
   public Long createArrayUsers(User[] arrayUsers) {
-    RequestBody requestBody =
-        RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"), GSON.toJson(arrayUsers));
-    Response response =
-        OK_CLIENT
-            .newCall(
-                new Request.Builder()
-                    .url(HttpUrl.get(URI.create(URI_USER + "/createWithArray")))
-                    .post(requestBody)
+    return (long)
+        getResponse(
+                getRequestBuilder("/createWithArray")
+                    .post(RequestBody.create(MEDIA_TYPE, GSON.toJson(arrayUsers)))
                     .build())
-            .execute();
-    return (long) response.code();
+            .code();
   }
 
   @SneakyThrows
   @Override
   public Long update(User user, String userName) {
-    RequestBody requestBody =
-        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), GSON.toJson(user));
-    Response response =
-        OK_CLIENT
-            .newCall(
-                new Request.Builder()
-                    .url(HttpUrl.get(URI.create(URI_USER + "/" + userName)))
-                    .put(requestBody)
+    return (long)
+        getResponse(
+                getRequestBuilder("/" + userName)
+                    .put(RequestBody.create(MEDIA_TYPE, GSON.toJson(user)))
                     .build())
-            .execute();
-    return (long) response.code();
+            .code();
   }
 
   @SneakyThrows
   @Override
   public Long delete(String userName) {
-    Request request =
-        new Request.Builder()
-            .url(HttpUrl.get(URI.create(URI_USER + "/" + userName)))
-            .delete()
-            .build();
-    Response response = OK_CLIENT.newCall(request).execute();
-    return (long) response.code();
+    return (long) getResponse(getRequestBuilder("/" + userName).delete().build()).code();
   }
+
+  @SneakyThrows
+  @Override
+  protected Response getResponse(Request request) {
+    return OK_CLIENT.newCall(request).execute();
+  }
+
+  @Override
+  protected Request.Builder getRequestBuilder(String url) {
+    return new Request.Builder().url(getUrl(url));
+  }
+
+  @Override
+  protected HttpUrl getUrl(String urlUrl) {
+    return HttpUrl.get(URI.create(URI_USER + urlUrl));
+  }
+
+  @SneakyThrows
+  @Override
+  protected User gsonGet(String urls) {
+    return GSON.fromJson(getResponse(getRequestBuilder(urls).build()).body().string(), User.class);
+  }
+
+  @SneakyThrows
+  @Override
+  User gsonWithBody(Response response) {
+    return GSON.fromJson(response.body().string(), User.class);
+  }
+
+  //  @SneakyThrows
+  //  private Order gsonWithBody(Response response) {
+  //    return GSON.fromJson(response.body().string(), Order.class);
+  //  }
 }

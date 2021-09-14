@@ -1,6 +1,8 @@
 package org.homework.repository.interfaces;
 
-public interface Repository<T, ID> {
+import org.homework.model.BaseEntity;
+
+public interface Repository<T extends BaseEntity<ID>, ID> {
 
   T getById(ID id);
 
