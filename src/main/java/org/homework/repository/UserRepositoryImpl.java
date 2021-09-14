@@ -126,9 +126,4 @@ public class UserRepositoryImpl extends Parser<User,Response,Request> implements
   User gsonWithBody(Response response) {
     return GSON.fromJson(response.body().string(), User.class);
   }
-
-  //  @SneakyThrows
-  //  private Order gsonWithBody(Response response) {
-  //    return GSON.fromJson(response.body().string(), Order.class);
-  //  }
 }
